@@ -81,7 +81,10 @@ class RandomWallpaperUI(Frame):
             event.widget.insert(0, "Enter text to search")
 
     def on_closing(self):
-        self.master.iconify()
+        if self.isStarted:
+            self.master.iconify()
+        else:
+            self.master.destroy()
 
     def set_clicked(self):
         if self.randomWallpaper:
@@ -105,6 +108,7 @@ class RandomWallpaperUI(Frame):
 
     def stop_clicked(self):
         if self.randomWallpaper:
+            self.isStarted = False
             self.randomWallpaper.stop()
 
 

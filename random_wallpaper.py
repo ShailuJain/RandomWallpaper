@@ -52,4 +52,5 @@ class RandomWallpaper:
 
     def stop(self):
         if self.timer:
+            self.timer = None
             self.toBeRun = False
