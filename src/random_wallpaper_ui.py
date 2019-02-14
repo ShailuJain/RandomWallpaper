@@ -1,7 +1,7 @@
 import time
 from tkinter import *
 
-from src.random_wallpaper import RandomWallpaper
+from random_wallpaper import RandomWallpaper
 
 
 class MyText(Text):

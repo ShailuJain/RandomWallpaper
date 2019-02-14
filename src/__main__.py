@@ -18,8 +18,7 @@ def install_all_packages():
 
 
 # install_all_packages()
-
-from src.random_wallpaper_ui import RandomWallpaperUI
+from random_wallpaper_ui import RandomWallpaperUI
 
 root = Tk()
 rw = RandomWallpaperUI(master=root)
