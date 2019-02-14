@@ -1,7 +1,6 @@
 import time
-from threading import Timer, Thread
-from sched import scheduler
-from image_scraper import *
+from threading import Thread
+from src.image_scraper import *
 import ctypes
 
 

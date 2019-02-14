@@ -1,6 +1,6 @@
 from tkinter import *
 
-from random_wallpaper import RandomWallpaper
+from src.random_wallpaper import RandomWallpaper
 
 
 class MyText(Text):
@@ -110,10 +110,3 @@ class RandomWallpaperUI(Frame):
         if self.randomWallpaper:
             self.isStarted = False
             self.randomWallpaper.stop()
-
-
-root = Tk()
-rw = RandomWallpaperUI(master=root)
-root.resizable(width=False, height=False)
-root.protocol("WM_DELETE_WINDOW", rw.on_closing)
-root.mainloop()
