@@ -6,7 +6,7 @@ from random_wallpaper import RandomWallpaper
 
 class MyText(Text):
     def append(self, string):
-        self.insert(INSERT, string+"\n")
+        self.insert(INSERT, str(string)+"\n")
 
     def get_text(self):
         return self.get(0, END)

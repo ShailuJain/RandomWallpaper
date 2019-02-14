@@ -47,7 +47,7 @@ class RandomWallpaper:
         if tmp_image:
             ctypes.windll.user32.SystemParametersInfoW(self.SPI_SETDESKWALLPAPER, 0, tmp_image.name, 0)
             self.ui.text.append("Wallpaper set!")
-            tmp_image.delete()
+            tmp_image.delete = True
         return None
 
     def set_time_interval(self, interval):
