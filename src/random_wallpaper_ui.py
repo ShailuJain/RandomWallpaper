@@ -17,7 +17,7 @@ class RandomWallpaperUI(Frame):
         super().__init__(master=master, **kwargs)
         self.master.title("Random Wallpaper Setter")
         self.lblSearch = self.txtSearch = self.lblIntervalTime = self.txtIntervalTime = self.topFrame = \
-            self.btnSetInterval = self.topFrame1 = self.set = self.stop = self.bottomFrame = None
+            self.btnSetInterval = self.topFrame1 = self.set = self.stop = self.bottomFrame = self.hide = None
 
         self.text = MyText(master=self)
         self.create_widgets()
@@ -73,6 +73,11 @@ class RandomWallpaperUI(Frame):
                            command=self.stop_clicked)
         self.stop.pack(padx=5, pady=5, side=LEFT)
 
+        # hide
+        self.hide = Button(master=self.bottomFrame, text="Hide window", bg="springgreen",
+                           command=self.hide_clicked)
+        self.hide.pack(padx=5, pady=5, side=LEFT)
+
     def txtSearchFocused(self, event):
         event.widget.delete(0, len(event.widget.get()))
 
@@ -110,3 +115,7 @@ class RandomWallpaperUI(Frame):
         if self.randomWallpaper:
             self.isStarted = False
             self.randomWallpaper.stop()
+
+    def hide_clicked(self):
+        self.master.withdraw()
+
