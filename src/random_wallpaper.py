@@ -1,6 +1,6 @@
 import time
 from threading import Thread
-from image_scraper import *
+from src.image_scraper import *
 import ctypes
 
 
