@@ -10,37 +10,44 @@ def convert_time_in_seconds(hours):
 
 class RandomWallpaper:
 
-    def __init__(self, query="Beautiful scenery", interval=1.0, text=None):
+    def __init__(self, query="Beautiful scenery", interval=1.0, ui=None):
         """
 
         :param query: Query to be searched
         :param interval: wallpaper changing interval (in hours)
         """
-        self.text = text
+        self.ui = ui
         self.SPI_SETDESKWALLPAPER = 20
         self.query = query
         self.interval = convert_time_in_seconds(interval)
         self.timer = None
         self.toBeRun = True
-        self.img_scrape = ImageScraper(self.text)
+        self.img_scrape = ImageScraper(self.ui)
 
     def start(self):
         def set_and_wait():
             while self.toBeRun:
-                self.set_random_wallpaper()
-                time.sleep(self.interval)
+                try:
+                    self.set_random_wallpaper()
+                    time.sleep(self.interval)
+                except ConnectionError as ce:
+                    self.ui.text.append("Please Wait for 1 minute!")
+                    self.ui.wait()
+                except Exception as e:
+                    self.ui.text.append(e)
+
         self.toBeRun = True
         if self.timer is None:
             self.timer = Thread(target=set_and_wait)
             self.timer.start()
-            self.text.append("Timer started")
+            self.ui.text.append("Timer started")
 
     def set_random_wallpaper(self):
         tmp_image = self.img_scrape.get_random_image_of(self.query)
         if tmp_image:
             ctypes.windll.user32.SystemParametersInfoW(self.SPI_SETDESKWALLPAPER, 0, tmp_image.name, 0)
-            self.text.append("Wallpaper set!")
-            return tmp_image
+            self.ui.text.append("Wallpaper set!")
+            tmp_image.delete()
         return None
 
     def set_time_interval(self, interval):

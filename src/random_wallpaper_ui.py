@@ -1,3 +1,4 @@
+import time
 from tkinter import *
 
 from src.random_wallpaper import RandomWallpaper
@@ -23,7 +24,7 @@ class RandomWallpaperUI(Frame):
         self.create_widgets()
         self.pack(fill=BOTH, expand=True)
         self.isStarted = False
-        self.randomWallpaper = RandomWallpaper(text=self.text)
+        self.randomWallpaper = RandomWallpaper(ui=self)
 
     def create_widgets(self):
         self.master.geometry("800x550")
@@ -119,3 +120,9 @@ class RandomWallpaperUI(Frame):
     def hide_clicked(self):
         self.master.withdraw()
 
+    def wait(self):
+        self.set.state = 'disabled'
+        self.stop.state = 'disabled'
+        time.sleep(60)
+        self.set.state = 'normal'
+        self.stop.state = 'normal'
