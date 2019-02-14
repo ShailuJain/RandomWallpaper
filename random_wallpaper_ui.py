@@ -99,7 +99,7 @@ class RandomWallpaperUI(Frame):
 
     def get_interval(self):
         if self.txtIntervalTime.get() != "":
-            interval = int(self.txtIntervalTime.get())
+            interval = float(self.txtIntervalTime.get())
             return interval
         return 1
 
