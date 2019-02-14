@@ -14,4 +14,5 @@ Random Desktop Wallpaper, Sets random wallpaper based on your search, and allows
 Uses google image search to web scrape random images and sets your desktop wallpaper as you need.
 
 ### Direct windows(.exe ) Download
-Download RandomWallpaper.exe
+
+[Download RandomWallpaper.exe](https://github.com/half-code/RandomWallpaper/raw/master/dist/RandomWallpaper.exe)
