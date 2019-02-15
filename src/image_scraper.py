@@ -32,6 +32,7 @@ class ImageScraper:
         return None
 
     def _request_image(self, image_link):
+        self.ui.text.append("Requesting Image")
         return requests.get(image_link, headers=self.header)
 
     def get_random_image_of(self, query):
@@ -45,4 +46,5 @@ class ImageScraper:
         resp = self._request_image(random_img_link)
         for chunk in resp:
             tmp_img.write(chunk)
+        self.ui.text.append("Getting random Image")
         return tmp_img

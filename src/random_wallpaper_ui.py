@@ -19,13 +19,18 @@ class RandomWallpaperUI(Frame):
 
     def __init__(self, master, **kwargs):
         super().__init__(master=master, **kwargs)
+        self.master.resizable(width=False, height=False)
+        self.master.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.master.title("Random Wallpaper Setter")
         self.lblSearch = self.txtSearch = self.lblIntervalTime = self.txtIntervalTime = self.topFrame = \
             self.btnSetInterval = self.topFrame1 = self.set = self.stop = self.bottomFrame = self.hide = None
 
         self.current_key = set()
-        self.text = MyText(master=self)
+        scrollbar = Scrollbar(master=self)
+        scrollbar.pack(side=RIGHT, fill=Y)
+        self.text = MyText(master=self, yscrollcommand=scrollbar.set)
         self.create_widgets()
+        scrollbar.config(command=self.text.yview)
         self.pack(fill=BOTH, expand=True)
         self.isStarted = False
         self.COMBINATION = (Key.ctrl_l, Key.alt_l, Key.space)
@@ -96,9 +101,8 @@ class RandomWallpaperUI(Frame):
     def on_closing(self):
         if self.isStarted:
             self.master.iconify()
+            self.text.append("Iconify")
         else:
-            self.isStarted = False
-            self.randomWallpaper.stop()
             if self.listener:
                 self.listener.stop()
             self.master.destroy()
@@ -108,10 +112,12 @@ class RandomWallpaperUI(Frame):
             self.randomWallpaper.set_search_query(self.txtSearch.get())
             self.randomWallpaper.set_time_interval(self.get_interval())
             if self.isStarted:
-                self.randomWallpaper.set_random_wallpaper()
+                self.text.append("Set Clicked")
+                Thread(target=self.randomWallpaper.set_random_wallpaper).start()
             else:
-                self.randomWallpaper.start()
+                self.text.append("Starting Random wallpaper")
                 self.isStarted = True
+                self.randomWallpaper.start()
 
     def set_interval(self):
         if self.randomWallpaper:
@@ -125,13 +131,16 @@ class RandomWallpaperUI(Frame):
 
     def stop_clicked(self):
         if self.randomWallpaper:
+            self.text.append("Stopping")
             self.isStarted = False
             self.randomWallpaper.stop()
 
     def hide_clicked(self):
+        self.text.append("Hiding")
         self.master.withdraw()
 
     def wait(self):
+        self.text.append("Wait")
         self.set.state = 'disabled'
         self.stop.state = 'disabled'
         time.sleep(60)
@@ -140,15 +149,17 @@ class RandomWallpaperUI(Frame):
 
     def show_on_keys(self):
         def on_key_pressed(key):
+            print(key)
             self.current_key.add(key)
             if all(k in self.current_key for k in self.COMBINATION):
                 self.master.deiconify()
 
         def on_key_released(key):
             try:
+                print(key)
                 self.current_key.remove(key)
             except KeyError:
                 pass
-
         with Listener(on_press=on_key_pressed, on_release=on_key_released) as self.listener:
             self.listener.join()
+        print("after listener join")

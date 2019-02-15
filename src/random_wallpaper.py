@@ -38,25 +38,30 @@ class RandomWallpaper:
 
         self.toBeRun = True
         if self.timer is None:
-            self.timer = Thread(target=set_and_wait)
+            self.timer = Thread(target=set_and_wait, daemon=True)
             self.timer.start()
             self.ui.text.append("Timer started")
 
     def set_random_wallpaper(self):
-        tmp_image = self.img_scrape.get_random_image_of(self.query)
-        if tmp_image:
-            ctypes.windll.user32.SystemParametersInfoW(self.SPI_SETDESKWALLPAPER, 0, tmp_image.name, 0)
-            self.ui.text.append("Wallpaper set!")
-            tmp_image.delete = True
-        return None
+        try:
+            tmp_image = self.img_scrape.get_random_image_of(self.query)
+            if tmp_image:
+                ctypes.windll.user32.SystemParametersInfoW(self.SPI_SETDESKWALLPAPER, 0, tmp_image.name, 0)
+                self.ui.text.append("Wallpaper set!")
+                tmp_image.delete = True
+        except ValueError as e:
+            self.ui.text.append(e)
 
     def set_time_interval(self, interval):
         self.interval = convert_time_in_seconds(interval)
+        self.ui.text.append("Interval set to " + str(interval))
 
     def set_search_query(self, query):
         self.query = query
+        self.ui.text.append("Query set to " + str(query))
 
     def stop(self):
         if self.timer:
+            self.ui.text.append("Stopping Random Wallpaper")
             self.timer = None
             self.toBeRun = False

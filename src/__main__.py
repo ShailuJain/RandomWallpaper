@@ -22,8 +22,5 @@ from src.random_wallpaper_ui import RandomWallpaperUI
 
 root = Tk()
 rw = RandomWallpaperUI(master=root)
-root.resizable(width=False, height=False)
-root.protocol("WM_DELETE_WINDOW", rw.on_closing)
 root.mainloop()
-
-
+print("After mainloop")
