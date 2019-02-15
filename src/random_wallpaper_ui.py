@@ -26,6 +26,7 @@ class RandomWallpaperUI(Frame):
             self.btnSetInterval = self.topFrame1 = self.set = self.stop = self.bottomFrame = self.hide = None
 
         self.current_key = set()
+        self.searchText = "Enter text to search"
         scrollbar = Scrollbar(master=self)
         scrollbar.pack(side=RIGHT, fill=Y)
         self.text = MyText(master=self, yscrollcommand=scrollbar.set)
@@ -50,7 +51,7 @@ class RandomWallpaperUI(Frame):
 
         # txtSearch
         self.txtSearch = Entry(master=self.topFrame, width=400, font=("Helvetica", 10))
-        self.txtSearch.insert(0, "Enter text to search")
+        self.txtSearch.insert(0, self.searchText)
         self.txtSearch.bind("<FocusOut>", self.txtSearchFocusedOut)
         self.txtSearch.bind("<FocusIn>", self.txtSearchFocused)
         self.txtSearch.pack(padx=10, pady=10, side=LEFT, fill=X)
@@ -92,11 +93,12 @@ class RandomWallpaperUI(Frame):
         self.hide.pack(padx=5, pady=5, side=LEFT)
 
     def txtSearchFocused(self, event):
-        event.widget.delete(0, len(event.widget.get()))
+        if event.widget.get() == self.searchText:
+            event.widget.delete(0, len(event.widget.get()))
 
     def txtSearchFocusedOut(self, event):
         if event.widget.get() == "":
-            event.widget.insert(0, "Enter text to search")
+            event.widget.insert(0, self.searchText)
 
     def on_closing(self):
         if self.isStarted:
@@ -149,14 +151,12 @@ class RandomWallpaperUI(Frame):
 
     def show_on_keys(self):
         def on_key_pressed(key):
-            print(key)
             self.current_key.add(key)
             if all(k in self.current_key for k in self.COMBINATION):
                 self.master.deiconify()
 
         def on_key_released(key):
             try:
-                print(key)
                 self.current_key.remove(key)
             except KeyError:
                 pass
