@@ -1,5 +1,8 @@
 import time
+from threading import Thread
 from tkinter import *
+
+from pynput.keyboard import *
 
 from src.random_wallpaper import RandomWallpaper
 
@@ -20,11 +23,15 @@ class RandomWallpaperUI(Frame):
         self.lblSearch = self.txtSearch = self.lblIntervalTime = self.txtIntervalTime = self.topFrame = \
             self.btnSetInterval = self.topFrame1 = self.set = self.stop = self.bottomFrame = self.hide = None
 
+        self.current_key = set()
         self.text = MyText(master=self)
         self.create_widgets()
         self.pack(fill=BOTH, expand=True)
         self.isStarted = False
+        self.COMBINATION = (Key.ctrl_l, Key.alt_l, Key.space)
         self.randomWallpaper = RandomWallpaper(ui=self)
+        self.listener = None
+        Thread(target=self.show_on_keys).start()
 
     def create_widgets(self):
         self.master.geometry("800x550")
@@ -64,7 +71,7 @@ class RandomWallpaperUI(Frame):
 
         self.bottomFrame.pack(side=BOTTOM)
 
-        #set
+        # set
         self.set = Button(master=self.bottomFrame, text="Set Random Wallpaper", bg="springgreen",
                           command=self.set_clicked)
         self.set.pack(padx=5, pady=5, side=LEFT)
@@ -90,6 +97,10 @@ class RandomWallpaperUI(Frame):
         if self.isStarted:
             self.master.iconify()
         else:
+            self.isStarted = False
+            self.randomWallpaper.stop()
+            if self.listener:
+                self.listener.stop()
             self.master.destroy()
 
     def set_clicked(self):
@@ -126,3 +137,18 @@ class RandomWallpaperUI(Frame):
         time.sleep(60)
         self.set.state = 'normal'
         self.stop.state = 'normal'
+
+    def show_on_keys(self):
+        def on_key_pressed(key):
+            self.current_key.add(key)
+            if all(k in self.current_key for k in self.COMBINATION):
+                self.master.deiconify()
+
+        def on_key_released(key):
+            try:
+                self.current_key.remove(key)
+            except KeyError:
+                pass
+
+        with Listener(on_press=on_key_pressed, on_release=on_key_released) as self.listener:
+            self.listener.join()
